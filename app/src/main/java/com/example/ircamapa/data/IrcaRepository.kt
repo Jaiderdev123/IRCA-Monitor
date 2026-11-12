@@ -5,18 +5,34 @@ import com.example.ircamapa.model.PuntoIrca
 import org.json.JSONArray
 import org.json.JSONObject
 
+/**
+ * Repositorio encargado de gestionar la persistencia local de los puntos de monitoreo IRCA
+ * (Índice de Riesgo de la Calidad del Agua) utilizando SharedPreferences en formato JSON.
+
+ */
 class IrcaRepository(context: Context) {
+
+    /** Instancia de SharedPreferences donde se almacenan los datos de los puntos IRCA. */
     private val prefs = context.getSharedPreferences("irca_puntos_prefs", Context.MODE_PRIVATE)
+
+    /** Clave usada para guardar y recuperar la lista JSON de puntos IRCA. */
     private val keyPuntos = "lista_puntos_irca"
 
+    /**
+     * Obtiene la lista completa de puntos de monitoreo IRCA guardados localmente.
+     * Si no existe ninguna lista previa en SharedPreferences, genera una lista de ejemplo inicial,
+     * la guarda de forma permanente y la retorna.
+        */
     fun obtenerPuntos(): List<PuntoIrca> {
         val jsonString = prefs.getString(keyPuntos, null)
+        // Si no hay datos guardados, inicializamos con los puntos de ejemplo predeterminados
         if (jsonString.isNullOrEmpty()) {
             val iniciales = puntosEjemplo()
             guardarPuntos(iniciales)
             return iniciales
         }
 
+        // Deserialización del String JSON a una lista de objetos PuntoIrca
         val lista = mutableListOf<PuntoIrca>()
         val jsonArray = JSONArray(jsonString)
         for (i in 0 until jsonArray.length()) {
@@ -35,6 +51,9 @@ class IrcaRepository(context: Context) {
         return lista
     }
 
+    /**
+     * Serializa y guarda la lista dada de puntos IRCA en SharedPreferences.
+     */
     fun guardarPuntos(puntos: List<PuntoIrca>) {
         val jsonArray = JSONArray()
         puntos.forEach { p ->
@@ -51,22 +70,36 @@ class IrcaRepository(context: Context) {
         prefs.edit().putString(keyPuntos, jsonArray.toString()).apply()
     }
 
+    /**
+     * Agrega un nuevo punto de monitoreo IRCA al inicio de la lista y persiste los cambios.
+        */
     fun agregarPunto(punto: PuntoIrca) {
         val actuales = obtenerPuntos().toMutableList()
-        actuales.add(0, punto)
+        actuales.add(0, punto) // Inserta al inicio para que aparezca primero
         guardarPuntos(actuales)
     }
 
+    /**
+     * Actualiza la información de un punto de monitoreo IRCA existente.
+     * Busca el punto por su identificador único [PuntoIrca.id] y reemplaza sus datos.
+         */
     fun actualizarPunto(punto: PuntoIrca) {
         val actuales = obtenerPuntos().map { if (it.id == punto.id) punto else it }
         guardarPuntos(actuales)
     }
 
+    /**
+     * Elimina un punto de monitoreo IRCA de la lista persistida según su ID.
+        */
     fun eliminarPunto(id: String) {
         val actuales = obtenerPuntos().filterNot { it.id == id }
         guardarPuntos(actuales)
     }
 
+    /**
+     * Proporciona la lista inicial de puntos de monitoreo de prueba ubicados en Popayán / Cauca.
+     * Se usa únicamente la primera vez que se ejecuta la aplicación cuando no existen datos previos.
+     */
     private fun puntosEjemplo(): List<PuntoIrca> {
         // Puntos de muestra iniciales en Popayán / Cauca
         return listOf(
