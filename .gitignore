@@ -1,0 +1,51 @@
+# Built application files
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Files for the ART/Dalvik VM
+*.class
+
+# Log files
+*.log
+
+# Package Files #
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+*.ear
+
+# Gradle files
+.gradle/
+build/
+/*/build/
+
+# Local configuration file (SDK path, etc)
+local.properties
+
+# Android Studio / IntelliJ IDEA
+*.iml
+*/*.iml
+.idea/
+!.idea/vcs.xml
+!.idea/codeStyles/
+!.idea/copyright/
+!.idea/inspectionProfiles/
+
+# Keystores & Signing
+*.jks
+*.keystore
+
+# External native build folder
+.externalNativeBuild/
+.cxx/
+
+# Google Services / Crashlytics (if added)
+google-services.json
+
+# OS specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Monitor IRCA</string>
+    <!-- Reemplaza con tu API Key de Google Cloud Console -->
+    <string name="google_maps_key" translatable="false">TU_API_KEY</string>
+</resources>
